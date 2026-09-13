@@ -20,7 +20,8 @@ export const Route = createFileRoute("/docs")({
 });
 
 function Docs() {
-  const [start, ...rest] = docSections;
+  const start = docSections[0]!;
+  const rest = docSections.slice(1);
   return (
     <SiteLayout>
       <PageHero
