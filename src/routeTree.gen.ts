@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -25,7 +27,13 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppChatRouteImport } from './routes/app.chat'
 import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
+import { Route as AppConnectorsIndexRouteImport } from './routes/app.connectors.index'
+import { Route as AppConnectorsConnectorIdRouteImport } from './routes/app.connectors.$connectorId'
+import { Route as AppConversationsIndexRouteImport } from './routes/app.conversations.index'
+import { Route as AppConversationsConversationIdRouteImport } from './routes/app.conversations.$conversationId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,6 +43,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -65,6 +78,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -107,21 +125,55 @@ const VerifyEmailRoute = VerifyEmailRouteImport.update({
   path: '/verify-email',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChatRoute = AppChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AppRoute,
+} as any)
 const DocsSlugRoute = DocsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => DocsRoute,
 } as any)
+const AppConnectorsIndexRoute = AppConnectorsIndexRouteImport.update({
+  id: '/connectors/',
+  path: '/connectors/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConnectorsConnectorIdRoute =
+  AppConnectorsConnectorIdRouteImport.update({
+    id: '/connectors/$connectorId',
+    path: '/connectors/$connectorId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppConversationsIndexRoute = AppConversationsIndexRouteImport.update({
+  id: '/conversations/',
+  path: '/conversations/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConversationsConversationIdRoute =
+  AppConversationsConversationIdRouteImport.update({
+    id: '/conversations/$conversationId',
+    path: '/conversations/$conversationId',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/docs': typeof DocsRouteWithChildren
   '/features': typeof FeaturesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -130,7 +182,13 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/use-cases': typeof UseCasesRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/chat': typeof AppChatRoute
   '/docs/$slug': typeof DocsSlugRoute
+  '/app/': typeof AppIndexRoute
+  '/app/connectors/$connectorId': typeof AppConnectorsConnectorIdRoute
+  '/app/conversations/$conversationId': typeof AppConversationsConversationIdRoute
+  '/app/connectors/': typeof AppConnectorsIndexRoute
+  '/app/conversations/': typeof AppConversationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,6 +199,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -149,18 +208,26 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/use-cases': typeof UseCasesRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/chat': typeof AppChatRoute
   '/docs/$slug': typeof DocsSlugRoute
+  '/app': typeof AppIndexRoute
+  '/app/connectors/$connectorId': typeof AppConnectorsConnectorIdRoute
+  '/app/conversations/$conversationId': typeof AppConversationsConversationIdRoute
+  '/app/connectors': typeof AppConnectorsIndexRoute
+  '/app/conversations': typeof AppConversationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/docs': typeof DocsRouteWithChildren
   '/features': typeof FeaturesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -169,19 +236,27 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/use-cases': typeof UseCasesRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/chat': typeof AppChatRoute
   '/docs/$slug': typeof DocsSlugRoute
+  '/app/': typeof AppIndexRoute
+  '/app/connectors/$connectorId': typeof AppConnectorsConnectorIdRoute
+  '/app/conversations/$conversationId': typeof AppConversationsConversationIdRoute
+  '/app/connectors/': typeof AppConnectorsIndexRoute
+  '/app/conversations/': typeof AppConversationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/app'
     | '/contact'
     | '/docs'
     | '/features'
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
+    | '/onboarding'
     | '/pricing'
     | '/privacy'
     | '/reset-password'
@@ -190,7 +265,13 @@ export interface FileRouteTypes {
     | '/terms'
     | '/use-cases'
     | '/verify-email'
+    | '/app/chat'
     | '/docs/$slug'
+    | '/app/'
+    | '/app/connectors/$connectorId'
+    | '/app/conversations/$conversationId'
+    | '/app/connectors/'
+    | '/app/conversations/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -201,6 +282,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
+    | '/onboarding'
     | '/pricing'
     | '/privacy'
     | '/reset-password'
@@ -209,17 +291,25 @@ export interface FileRouteTypes {
     | '/terms'
     | '/use-cases'
     | '/verify-email'
+    | '/app/chat'
     | '/docs/$slug'
+    | '/app'
+    | '/app/connectors/$connectorId'
+    | '/app/conversations/$conversationId'
+    | '/app/connectors'
+    | '/app/conversations'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/app'
     | '/contact'
     | '/docs'
     | '/features'
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
+    | '/onboarding'
     | '/pricing'
     | '/privacy'
     | '/reset-password'
@@ -228,18 +318,26 @@ export interface FileRouteTypes {
     | '/terms'
     | '/use-cases'
     | '/verify-email'
+    | '/app/chat'
     | '/docs/$slug'
+    | '/app/'
+    | '/app/connectors/$connectorId'
+    | '/app/conversations/$conversationId'
+    | '/app/connectors/'
+    | '/app/conversations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
   DocsRoute: typeof DocsRouteWithChildren
   FeaturesRoute: typeof FeaturesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -264,6 +362,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -306,6 +411,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -364,6 +476,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/chat': {
+      id: '/app/chat'
+      path: '/chat'
+      fullPath: '/app/chat'
+      preLoaderRoute: typeof AppChatRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/docs/$slug': {
       id: '/docs/$slug'
       path: '/$slug'
@@ -371,8 +497,56 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsSlugRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/app/connectors/': {
+      id: '/app/connectors/'
+      path: '/connectors'
+      fullPath: '/app/connectors/'
+      preLoaderRoute: typeof AppConnectorsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/connectors/$connectorId': {
+      id: '/app/connectors/$connectorId'
+      path: '/connectors/$connectorId'
+      fullPath: '/app/connectors/$connectorId'
+      preLoaderRoute: typeof AppConnectorsConnectorIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/conversations/': {
+      id: '/app/conversations/'
+      path: '/conversations'
+      fullPath: '/app/conversations/'
+      preLoaderRoute: typeof AppConversationsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/conversations/$conversationId': {
+      id: '/app/conversations/$conversationId'
+      path: '/conversations/$conversationId'
+      fullPath: '/app/conversations/$conversationId'
+      preLoaderRoute: typeof AppConversationsConversationIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
+
+interface AppRouteChildren {
+  AppChatRoute: typeof AppChatRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppConnectorsConnectorIdRoute: typeof AppConnectorsConnectorIdRoute
+  AppConversationsConversationIdRoute: typeof AppConversationsConversationIdRoute
+  AppConnectorsIndexRoute: typeof AppConnectorsIndexRoute
+  AppConversationsIndexRoute: typeof AppConversationsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppChatRoute: AppChatRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppConnectorsConnectorIdRoute: AppConnectorsConnectorIdRoute,
+  AppConversationsConversationIdRoute: AppConversationsConversationIdRoute,
+  AppConnectorsIndexRoute: AppConnectorsIndexRoute,
+  AppConversationsIndexRoute: AppConversationsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface DocsRouteChildren {
   DocsSlugRoute: typeof DocsSlugRoute
@@ -387,12 +561,14 @@ const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
   DocsRoute: DocsRouteWithChildren,
   FeaturesRoute: FeaturesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
