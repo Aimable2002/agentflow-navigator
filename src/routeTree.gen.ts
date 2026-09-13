@@ -28,12 +28,19 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppChatRouteImport } from './routes/app.chat'
+import { Route as AppUsageRouteImport } from './routes/app.usage'
 import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
 import { Route as AppConnectorsIndexRouteImport } from './routes/app.connectors.index'
 import { Route as AppConnectorsConnectorIdRouteImport } from './routes/app.connectors.$connectorId'
 import { Route as AppConversationsIndexRouteImport } from './routes/app.conversations.index'
 import { Route as AppConversationsConversationIdRouteImport } from './routes/app.conversations.$conversationId'
+import { Route as AppSettingsAccountRouteImport } from './routes/app.settings.account'
+import { Route as AppSettingsApiKeysRouteImport } from './routes/app.settings.api-keys'
+import { Route as AppSettingsNotificationsRouteImport } from './routes/app.settings.notifications'
+import { Route as AppTasksIndexRouteImport } from './routes/app.tasks.index'
+import { Route as AppTasksTaskIdRouteImport } from './routes/app.tasks.$taskId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -130,9 +137,19 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBillingRoute = AppBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChatRoute = AppChatRouteImport.update({
   id: '/chat',
   path: '/chat',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUsageRoute = AppUsageRouteImport.update({
+  id: '/usage',
+  path: '/usage',
   getParentRoute: () => AppRoute,
 } as any)
 const DocsSlugRoute = DocsSlugRouteImport.update({
@@ -162,6 +179,32 @@ const AppConversationsConversationIdRoute =
     path: '/conversations/$conversationId',
     getParentRoute: () => AppRoute,
   } as any)
+const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
+  id: '/settings/account',
+  path: '/settings/account',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsApiKeysRoute = AppSettingsApiKeysRouteImport.update({
+  id: '/settings/api-keys',
+  path: '/settings/api-keys',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsNotificationsRoute =
+  AppSettingsNotificationsRouteImport.update({
+    id: '/settings/notifications',
+    path: '/settings/notifications',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
+  id: '/tasks/',
+  path: '/tasks/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTasksTaskIdRoute = AppTasksTaskIdRouteImport.update({
+  id: '/tasks/$taskId',
+  path: '/tasks/$taskId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -182,13 +225,20 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/use-cases': typeof UseCasesRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
+  '/app/usage': typeof AppUsageRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/app/': typeof AppIndexRoute
   '/app/connectors/$connectorId': typeof AppConnectorsConnectorIdRoute
   '/app/conversations/$conversationId': typeof AppConversationsConversationIdRoute
+  '/app/settings/account': typeof AppSettingsAccountRoute
+  '/app/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/app/settings/notifications': typeof AppSettingsNotificationsRoute
+  '/app/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/app/connectors/': typeof AppConnectorsIndexRoute
   '/app/conversations/': typeof AppConversationsIndexRoute
+  '/app/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -208,13 +258,20 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/use-cases': typeof UseCasesRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
+  '/app/usage': typeof AppUsageRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/app': typeof AppIndexRoute
   '/app/connectors/$connectorId': typeof AppConnectorsConnectorIdRoute
   '/app/conversations/$conversationId': typeof AppConversationsConversationIdRoute
+  '/app/settings/account': typeof AppSettingsAccountRoute
+  '/app/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/app/settings/notifications': typeof AppSettingsNotificationsRoute
+  '/app/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/app/connectors': typeof AppConnectorsIndexRoute
   '/app/conversations': typeof AppConversationsIndexRoute
+  '/app/tasks': typeof AppTasksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -236,13 +293,20 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/use-cases': typeof UseCasesRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/chat': typeof AppChatRoute
+  '/app/usage': typeof AppUsageRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/app/': typeof AppIndexRoute
   '/app/connectors/$connectorId': typeof AppConnectorsConnectorIdRoute
   '/app/conversations/$conversationId': typeof AppConversationsConversationIdRoute
+  '/app/settings/account': typeof AppSettingsAccountRoute
+  '/app/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/app/settings/notifications': typeof AppSettingsNotificationsRoute
+  '/app/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/app/connectors/': typeof AppConnectorsIndexRoute
   '/app/conversations/': typeof AppConversationsIndexRoute
+  '/app/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -265,13 +329,20 @@ export interface FileRouteTypes {
     | '/terms'
     | '/use-cases'
     | '/verify-email'
+    | '/app/billing'
     | '/app/chat'
+    | '/app/usage'
     | '/docs/$slug'
     | '/app/'
     | '/app/connectors/$connectorId'
     | '/app/conversations/$conversationId'
+    | '/app/settings/account'
+    | '/app/settings/api-keys'
+    | '/app/settings/notifications'
+    | '/app/tasks/$taskId'
     | '/app/connectors/'
     | '/app/conversations/'
+    | '/app/tasks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -291,13 +362,20 @@ export interface FileRouteTypes {
     | '/terms'
     | '/use-cases'
     | '/verify-email'
+    | '/app/billing'
     | '/app/chat'
+    | '/app/usage'
     | '/docs/$slug'
     | '/app'
     | '/app/connectors/$connectorId'
     | '/app/conversations/$conversationId'
+    | '/app/settings/account'
+    | '/app/settings/api-keys'
+    | '/app/settings/notifications'
+    | '/app/tasks/$taskId'
     | '/app/connectors'
     | '/app/conversations'
+    | '/app/tasks'
   id:
     | '__root__'
     | '/'
@@ -318,13 +396,20 @@ export interface FileRouteTypes {
     | '/terms'
     | '/use-cases'
     | '/verify-email'
+    | '/app/billing'
     | '/app/chat'
+    | '/app/usage'
     | '/docs/$slug'
     | '/app/'
     | '/app/connectors/$connectorId'
     | '/app/conversations/$conversationId'
+    | '/app/settings/account'
+    | '/app/settings/api-keys'
+    | '/app/settings/notifications'
+    | '/app/tasks/$taskId'
     | '/app/connectors/'
     | '/app/conversations/'
+    | '/app/tasks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -483,11 +568,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/billing': {
+      id: '/app/billing'
+      path: '/billing'
+      fullPath: '/app/billing'
+      preLoaderRoute: typeof AppBillingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/chat': {
       id: '/app/chat'
       path: '/chat'
       fullPath: '/app/chat'
       preLoaderRoute: typeof AppChatRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/usage': {
+      id: '/app/usage'
+      path: '/usage'
+      fullPath: '/app/usage'
+      preLoaderRoute: typeof AppUsageRouteImport
       parentRoute: typeof AppRoute
     }
     '/docs/$slug': {
@@ -525,25 +624,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConversationsConversationIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/settings/account': {
+      id: '/app/settings/account'
+      path: '/settings/account'
+      fullPath: '/app/settings/account'
+      preLoaderRoute: typeof AppSettingsAccountRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings/api-keys': {
+      id: '/app/settings/api-keys'
+      path: '/settings/api-keys'
+      fullPath: '/app/settings/api-keys'
+      preLoaderRoute: typeof AppSettingsApiKeysRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings/notifications': {
+      id: '/app/settings/notifications'
+      path: '/settings/notifications'
+      fullPath: '/app/settings/notifications'
+      preLoaderRoute: typeof AppSettingsNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tasks/': {
+      id: '/app/tasks/'
+      path: '/tasks'
+      fullPath: '/app/tasks/'
+      preLoaderRoute: typeof AppTasksIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tasks/$taskId': {
+      id: '/app/tasks/$taskId'
+      path: '/tasks/$taskId'
+      fullPath: '/app/tasks/$taskId'
+      preLoaderRoute: typeof AppTasksTaskIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppBillingRoute: typeof AppBillingRoute
   AppChatRoute: typeof AppChatRoute
+  AppUsageRoute: typeof AppUsageRoute
   AppIndexRoute: typeof AppIndexRoute
   AppConnectorsConnectorIdRoute: typeof AppConnectorsConnectorIdRoute
   AppConversationsConversationIdRoute: typeof AppConversationsConversationIdRoute
+  AppSettingsAccountRoute: typeof AppSettingsAccountRoute
+  AppSettingsApiKeysRoute: typeof AppSettingsApiKeysRoute
+  AppSettingsNotificationsRoute: typeof AppSettingsNotificationsRoute
+  AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
   AppConnectorsIndexRoute: typeof AppConnectorsIndexRoute
   AppConversationsIndexRoute: typeof AppConversationsIndexRoute
+  AppTasksIndexRoute: typeof AppTasksIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBillingRoute: AppBillingRoute,
   AppChatRoute: AppChatRoute,
+  AppUsageRoute: AppUsageRoute,
   AppIndexRoute: AppIndexRoute,
   AppConnectorsConnectorIdRoute: AppConnectorsConnectorIdRoute,
   AppConversationsConversationIdRoute: AppConversationsConversationIdRoute,
+  AppSettingsAccountRoute: AppSettingsAccountRoute,
+  AppSettingsApiKeysRoute: AppSettingsApiKeysRoute,
+  AppSettingsNotificationsRoute: AppSettingsNotificationsRoute,
+  AppTasksTaskIdRoute: AppTasksTaskIdRoute,
   AppConnectorsIndexRoute: AppConnectorsIndexRoute,
   AppConversationsIndexRoute: AppConversationsIndexRoute,
+  AppTasksIndexRoute: AppTasksIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
