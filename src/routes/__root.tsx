@@ -14,19 +14,26 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-ink px-4 text-white">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-pink">ERR-404 / route not resolved</p>
+        <h1 className="mt-4 font-display text-7xl font-semibold tracking-tight">404</h1>
+        <h2 className="mt-3 font-display text-xl font-semibold">Page not found</h2>
+        <p className="mt-2 text-sm text-fog">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <div className="mt-6">
+        <div className="mt-8 flex flex-wrap justify-center gap-2">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-pink px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-white"
           >
             Go home
+          </Link>
+          <Link
+            to="/support"
+            className="inline-flex items-center justify-center rounded-md border border-line bg-ink2 px-4 py-2 text-sm font-medium text-fog transition-colors hover:text-white"
+          >
+            Contact support
           </Link>
         </div>
       </div>
