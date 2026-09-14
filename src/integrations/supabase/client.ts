@@ -7,10 +7,10 @@ import { createClient } from "@supabase/supabase-js";
  * project's publishable values and are safe to ship in the client bundle.
  */
 export const SUPABASE_URL =
-  (import.meta.env.VITE_SUPABASE_URL as string | undefined) ?? "https://vnnspuyxxqvcdeafzyoe.supabase.co";
+  (import.meta.env["VITE_SUPABASE_URL"] as string | undefined) ?? "https://vnnspuyxxqvcdeafzyoe.supabase.co";
 
 export const SUPABASE_ANON_KEY =
-  (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ??
+  (import.meta.env["VITE_SUPABASE_ANON_KEY"] as string | undefined) ??
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZubnNwdXl4eHF2Y2RlYWZ6eW9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzOTU4MDUsImV4cCI6MjEwNDk3MTgwNX0.lv-Nz2fDZlc17yk_6MBhlvdok-NWGXlp689Bd_vR3SA";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
