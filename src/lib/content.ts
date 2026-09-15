@@ -34,15 +34,88 @@ export const tierMeta: Record<Tier, { label: string; blurb: string; use: string;
  * Names shown on public marketing pages, where no session exists. The live
  * catalogue in the app comes from the `connector_catalog` table.
  */
-export const marketingConnectors: { id: string; name: string; category: string; tagline: string }[] = [
-  { id: "mt5", name: "MT5", category: "Trading", tagline: "Write, backtest and iterate Expert Advisors" },
-  { id: "github", name: "GitHub", category: "Code", tagline: "Files, commits, pull requests, CI" },
-  { id: "linear", name: "Linear", category: "Tracking", tagline: "Issues, cycles and project state" },
-  { id: "telegram", name: "Telegram", category: "Messaging", tagline: "Talk to the agent and get task alerts in chat" },
-  { id: "hubspot", name: "HubSpot", category: "CRM", tagline: "Contacts, deals and pipeline hygiene" },
-  { id: "xero", name: "Xero", category: "Accounting", tagline: "Bookkeeping, invoices and reconciliation" },
-  { id: "zapier", name: "Zapier", category: "Bridge", tagline: "A bridge to thousands of other apps" },
-  { id: "lovable", name: "Lovable", category: "Builds", tagline: "Trigger and manage full-stack app builds" },
+export type MarketingConnector = {
+  id: string;
+  name: string;
+  category: string;
+  tagline: string;
+  description: string;
+  actions: string[];
+};
+
+export const marketingConnectors: MarketingConnector[] = [
+  {
+    id: "mt5",
+    name: "MT5",
+    category: "Trading",
+    tagline: "Write, backtest and iterate Expert Advisors",
+    description:
+      "The agent writes MQL5 Expert Advisors, runs them through the strategy tester, reads the report and iterates on the parameters until the numbers hold up.",
+    actions: ["Write an EA from a described edge", "Run a backtest over a date range", "Tune parameters and re-test", "Summarise drawdown and expectancy"],
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    category: "Code",
+    tagline: "Files, commits, pull requests, CI",
+    description:
+      "Read the repository, make a change on a branch, open a pull request and watch the checks. When CI fails, the agent reads the logs and pushes a fix.",
+    actions: ["Read files and history", "Commit on a branch", "Open and update pull requests", "Diagnose failing CI runs"],
+  },
+  {
+    id: "linear",
+    name: "Linear",
+    category: "Tracking",
+    tagline: "Issues, cycles and project state",
+    description:
+      "Turn findings into tracked work. The agent files issues with the context it gathered, moves them through states and reports on cycle progress.",
+    actions: ["Create and update issues", "Attach results to an issue", "Move issues through states", "Report on a cycle"],
+  },
+  {
+    id: "telegram",
+    name: "Telegram",
+    category: "Messaging",
+    tagline: "Talk to the agent and get task alerts in chat",
+    description:
+      "Get a message the moment a background task finishes or fails, and reply in the same chat to send the agent its next instruction.",
+    actions: ["Notify on task completion", "Alert on failures", "Accept new instructions from chat", "Send daily digests"],
+  },
+  {
+    id: "hubspot",
+    name: "HubSpot",
+    category: "CRM",
+    tagline: "Contacts, deals and pipeline hygiene",
+    description:
+      "Read the pipeline, flag deals that have gone quiet, clean up duplicate records and draft the follow-ups that are overdue.",
+    actions: ["Summarise the pipeline", "Flag stalled deals", "Update contacts and deals", "Draft follow-ups"],
+  },
+  {
+    id: "xero",
+    name: "Xero",
+    category: "Accounting",
+    tagline: "Bookkeeping, invoices and reconciliation",
+    description:
+      "Reconcile a period, categorise what is obvious and hand back a short list of the transactions that genuinely need a human decision.",
+    actions: ["Reconcile a period", "Categorise transactions", "Chase unpaid invoices", "Produce a month-end summary"],
+  },
+  {
+    id: "zapier",
+    name: "Zapier",
+    category: "Bridge",
+    tagline: "A bridge to thousands of other apps",
+    description:
+      "Anything without a first-class connector can still be reached. The agent triggers your Zaps and reads their results back into the conversation.",
+    actions: ["Trigger a Zap", "Pass structured data through", "Read the run result", "Chain several apps in one job"],
+  },
+  {
+    id: "lovable",
+    name: "Lovable",
+    category: "Builds",
+    tagline: "Trigger and manage full-stack app builds",
+    description:
+      "Describe an app or a change and the agent drives the build end to end, then reports back with what shipped and what needs review.",
+    actions: ["Start a full-stack build", "Apply a described change", "Read build status", "Summarise what shipped"],
+  },
 ];
 
 export const connectorLabels: Record<string, string> = {
