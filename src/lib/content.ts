@@ -99,6 +99,7 @@ const basePlans: (Omit<Plan, "blurb" | "features" | "limits"> & { limits?: strin
     price: "$49",
     cadence: "per month",
     tagline: "For people who put the agent in their daily loop.",
+    quota: "10,000 agent requests / month",
     priority: "Priority processing — every request skips the free queue.",
     cta: "Upgrade to Pro",
     featured: true,
@@ -118,6 +119,7 @@ const basePlans: (Omit<Plan, "blurb" | "features" | "limits"> & { limits?: strin
     price: "$199",
     cadence: "per month",
     tagline: "For teams running the agent against production systems.",
+    quota: "Unlimited fair-use requests",
     priority: "Reserved best-tier capacity — no queue, even at peak.",
     cta: "Talk to us",
     includes: [
