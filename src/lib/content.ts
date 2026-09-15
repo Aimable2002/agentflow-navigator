@@ -74,7 +74,7 @@ export type Plan = {
   limits: string[];
 };
 
-export const plans: Plan[] = [
+const basePlans: (Omit<Plan, "blurb" | "features" | "limits"> & { limits?: string[] })[] = [
   {
     id: "free",
     name: "Free",
