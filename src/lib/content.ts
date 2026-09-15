@@ -6,22 +6,54 @@
  */
 import type { Tier } from "./types";
 
-export const tierMeta: Record<Tier, { label: string; blurb: string; use: string }> = {
+export const tierMeta: Record<Tier, { label: string; blurb: string; use: string; note: string; className: string }> = {
   small: {
     label: "small",
     blurb: "Fast, cheap model for lookups, formatting and short answers.",
     use: "Status checks, summaries, single tool calls",
+    note: "Lookups, formatting, single tool calls",
+    className: "text-mint",
   },
   medium: {
     label: "medium",
     blurb: "Balanced model for multi-step work with a few tool calls.",
     use: "Issue triage, data sync, code edits",
+    note: "Multi-step work with a few tool calls",
+    className: "text-amber",
   },
   best: {
     label: "best",
     blurb: "Highest-capability model for hard reasoning and long chains.",
     use: "Strategy design, architecture, tricky debugging",
+    note: "Hard reasoning and long tool chains",
+    className: "text-pink",
   },
+};
+
+/**
+ * Names shown on public marketing pages, where no session exists. The live
+ * catalogue in the app comes from the `connector_catalog` table.
+ */
+export const marketingConnectors: { id: string; name: string; category: string; tagline: string }[] = [
+  { id: "mt5", name: "MT5", category: "Trading", tagline: "Write, backtest and iterate Expert Advisors" },
+  { id: "github", name: "GitHub", category: "Code", tagline: "Files, commits, pull requests, CI" },
+  { id: "linear", name: "Linear", category: "Tracking", tagline: "Issues, cycles and project state" },
+  { id: "telegram", name: "Telegram", category: "Messaging", tagline: "Talk to the agent and get task alerts in chat" },
+  { id: "hubspot", name: "HubSpot", category: "CRM", tagline: "Contacts, deals and pipeline hygiene" },
+  { id: "xero", name: "Xero", category: "Accounting", tagline: "Bookkeeping, invoices and reconciliation" },
+  { id: "zapier", name: "Zapier", category: "Bridge", tagline: "A bridge to thousands of other apps" },
+  { id: "lovable", name: "Lovable", category: "Builds", tagline: "Trigger and manage full-stack app builds" },
+];
+
+export const connectorLabels: Record<string, string> = {
+  mt5: "MT5",
+  github: "GitHub",
+  linear: "Linear",
+  telegram: "Telegram",
+  hubspot: "HubSpot",
+  xero: "Xero",
+  zapier: "Zapier",
+  lovable: "Lovable",
 };
 
 export type Plan = {

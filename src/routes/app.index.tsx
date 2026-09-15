@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/app/app-shell";
 import { InlineTaskCard, Meter, Panel, StatusPill, TierBadge } from "@/components/pink/primitives";
-import { connectors, conversations, tasks, usage, tierMeta } from "@/lib/mock";
+import { useConnectors, useConversations, useProfile, useTasks, useUsageEvents } from "@/lib/queries";
+import { tierMeta } from "@/lib/content";
+import { planLabel, relativeTime, shortId, taskDuration, money } from "@/lib/format";
+import { useSession } from "@/lib/auth";
+import type { Tier } from "@/lib/types";
 
 export const Route = createFileRoute("/app/")({
   head: () => ({
@@ -15,16 +19,47 @@ export const Route = createFileRoute("/app/")({
   component: Overview,
 });
 
+const tiers: Tier[] = ["small", "medium", "best"];
+
 function Overview() {
+  const { user } = useSession();
+  const { data: profile } = useProfile();
+  const { data: tasks = [] } = useTasks();
+  const { data: conversations = [] } = useConversations();
+  const { data: connectors = [] } = useConnectors();
+  const { data: events = [] } = useUsageEvents();
+
   const running = tasks.filter((t) => t.status === "running");
   const connected = connectors.filter((c) => c.connected);
-  const pct = Math.round((usage.requestsUsed / usage.requestsLimit) * 100);
+  const used = profile?.quota_used ?? 0;
+  const limit = profile?.quota_limit ?? 500;
+  const pct = Math.round((used / Math.max(1, limit)) * 100);
+  const concurrentLimit = profile?.concurrent_limit ?? 5;
+  const spend = events.reduce((sum, e) => sum + Number(e.cost_usd ?? 0), 0);
+  const totalRequests = events.reduce((sum, e) => sum + (e.requests ?? 0), 0);
+
+  const byTier = tiers.map((tier) => {
+    const rows = events.filter((e) => e.tier === tier);
+    const requests = rows.reduce((s, e) => s + (e.requests ?? 0), 0);
+    return {
+      tier,
+      requests,
+      cost: money(rows.reduce((s, e) => s + Number(e.cost_usd ?? 0), 0)),
+      share: totalRequests ? Math.round((requests / totalRequests) * 100) : 0,
+    };
+  });
+
+  const name = profile?.full_name?.split(" ")[0] ?? user?.email?.split("@")[0] ?? "there";
 
   return (
     <>
       <PageHeader
-        title="Good afternoon, Avery"
-        copy="Two tasks are in flight and your Xero connection needs a look. Everything else is quiet."
+        title={`Welcome back, ${name}`}
+        copy={
+          running.length
+            ? `${running.length} task${running.length > 1 ? "s" : ""} in flight. Everything else is quiet.`
+            : "Nothing running. Start a conversation and the agent will pick a tier and the tools it needs."
+        }
         actions={
           <>
             <Link
@@ -46,9 +81,11 @@ function Overview() {
       <div className="space-y-6 p-4 lg:p-8">
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Panel>
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-mute">Requests this month</p>
-            <p className="mt-2 font-display text-3xl font-semibold">{usage.requestsUsed}</p>
-            <p className="font-mono text-xs text-fog">of {usage.requestsLimit} on {usage.plan}</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-mute">Requests this cycle</p>
+            <p className="mt-2 font-display text-3xl font-semibold">{used}</p>
+            <p className="font-mono text-xs text-fog">
+              of {limit} on {planLabel(profile?.plan)}
+            </p>
             <div className="mt-3">
               <Meter value={pct} tone={pct > 80 ? "pink" : "mute"} />
             </div>
@@ -57,10 +94,10 @@ function Overview() {
             <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-mute">Tasks running</p>
             <p className="mt-2 font-display text-3xl font-semibold text-violet">{running.length}</p>
             <p className="font-mono text-xs text-fog">
-              {usage.concurrent} of {usage.concurrentLimit} concurrent slots
+              {running.length} of {concurrentLimit} concurrent slots
             </p>
             <div className="mt-3">
-              <Meter value={(usage.concurrent / usage.concurrentLimit) * 100} tone="violet" />
+              <Meter value={(running.length / Math.max(1, concurrentLimit)) * 100} tone="violet" />
             </div>
           </Panel>
           <Panel>
@@ -73,8 +110,8 @@ function Overview() {
           </Panel>
           <Panel accent>
             <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-mute">Estimated spend</p>
-            <p className="mt-2 font-display text-3xl font-semibold">{usage.spend}</p>
-            <p className="font-mono text-xs text-fog">Free tier · best-effort priority</p>
+            <p className="mt-2 font-display text-3xl font-semibold">{money(spend)}</p>
+            <p className="font-mono text-xs text-fog">{planLabel(profile?.plan)} plan this cycle</p>
             <Link to="/app/billing" className="mt-3 inline-block font-mono text-[11px] text-pink hover:underline">
               Upgrade for priority →
             </Link>
@@ -90,6 +127,7 @@ function Overview() {
               </Link>
             </div>
             <div className="mt-4 space-y-3">
+              {running.length === 0 && <p className="text-sm text-mute">No background work at the moment.</p>}
               {running.map((t) => (
                 <InlineTaskCard
                   key={t.id}
@@ -98,14 +136,15 @@ function Overview() {
                   tier={t.tier}
                   status={t.status}
                   progress={t.progress}
-                  meta={`${t.id} · ${t.duration}`}
+                  meta={`${shortId(t.id)} · ${taskDuration(t)}`}
                 />
               ))}
             </div>
 
             <h3 className="mt-8 font-mono text-[11px] uppercase tracking-[0.14em] text-mute">Recent agent activity</h3>
             <ul className="mt-3 divide-y divide-line">
-              {tasks.slice(3).map((t) => (
+              {tasks.length === 0 && <li className="py-3 text-sm text-mute">Nothing here yet.</li>}
+              {tasks.slice(0, 6).map((t) => (
                 <li key={t.id}>
                   <Link
                     to="/app/tasks/$taskId"
@@ -115,7 +154,7 @@ function Overview() {
                     <StatusPill status={t.status} />
                     <span className="text-sm text-white">{t.title}</span>
                     <TierBadge tier={t.tier} className="ml-auto" />
-                    <span className="font-mono text-[11px] text-mute">{t.duration}</span>
+                    <span className="font-mono text-[11px] text-mute">{taskDuration(t)}</span>
                   </Link>
                 </li>
               ))}
@@ -126,7 +165,7 @@ function Overview() {
             <Panel>
               <h2 className="font-display text-lg font-semibold">Tier mix</h2>
               <div className="mt-4 space-y-4">
-                {usage.byTier.map((t) => (
+                {byTier.map((t) => (
                   <div key={t.tier}>
                     <div className="flex items-center gap-2">
                       <TierBadge tier={t.tier} />
@@ -159,14 +198,18 @@ function Overview() {
                     </Link>
                     <span
                       className={
-                        c.connected
-                          ? c.health === "degraded"
+                        c.status === "connected"
+                          ? "ml-auto font-mono text-[11px] text-mint"
+                          : c.status === "degraded"
                             ? "ml-auto font-mono text-[11px] text-amber"
-                            : "ml-auto font-mono text-[11px] text-mint"
-                          : "ml-auto font-mono text-[11px] text-mute"
+                            : "ml-auto font-mono text-[11px] text-mute"
                       }
                     >
-                      {c.connected ? (c.health === "degraded" ? "needs attention" : "connected") : "not connected"}
+                      {c.status === "connected"
+                        ? "connected"
+                        : c.status === "degraded"
+                          ? "needs attention"
+                          : "not connected"}
                     </span>
                   </li>
                 ))}
@@ -176,6 +219,7 @@ function Overview() {
             <Panel>
               <h2 className="font-display text-lg font-semibold">Latest conversations</h2>
               <ul className="mt-4 space-y-3">
+                {conversations.length === 0 && <li className="text-sm text-mute">No conversations yet.</li>}
                 {conversations.slice(0, 4).map((c) => (
                   <li key={c.id}>
                     <Link
@@ -185,7 +229,7 @@ function Overview() {
                     >
                       {c.title}
                       <span className="block font-mono text-[10px] text-mute">
-                        {c.id} · {c.updated}
+                        {shortId(c.id, "CNV")} · {relativeTime(c.updated_at)}
                       </span>
                     </Link>
                   </li>
