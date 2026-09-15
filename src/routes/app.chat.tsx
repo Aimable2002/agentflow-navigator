@@ -21,9 +21,10 @@ export const Route = createFileRoute("/app/chat")({
       { property: "og:description", content: "One surface for conversation, tool actions and background execution." },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>) => ({
-    conversation: typeof search["conversation"] === "string" ? search["conversation"] : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { conversation?: string } => {
+    const value = search["conversation"];
+    return typeof value === "string" && value ? { conversation: value } : {};
+  },
   component: Chat,
 });
 
@@ -34,7 +35,9 @@ const suggestions = [
   "Summarise the HubSpot pipeline and flag stalled deals",
 ];
 
-function Bubble({ m, taskMeta }: { m: Message; taskMeta?: { title: string; status: string; progress: number; meta: string } }) {
+type TaskMeta = { title: string; status: string; progress: number; meta: string } | undefined;
+
+function Bubble({ m, taskMeta }: { m: Message; taskMeta: TaskMeta }) {
   if (m.role === "user") {
     return (
       <div className="flex gap-3">
