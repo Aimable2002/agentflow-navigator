@@ -49,7 +49,7 @@ function Pricing() {
       <div className="mx-auto max-w-7xl px-6">
         <section className="grid gap-4 py-14 lg:grid-cols-3">
           {plans.map((p) => (
-            <Panel key={p.id} accent={p.featured} className="flex flex-col">
+            <Panel key={p.id} accent={!!p.featured} className="flex flex-col">
               <div className="flex items-center gap-2">
                 <h2 className="font-display text-xl font-semibold">{p.name}</h2>
                 {p.featured && (

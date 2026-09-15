@@ -232,7 +232,7 @@ function Landing() {
           </div>
           <div className="mt-10 grid gap-4 lg:grid-cols-3">
             {plans.map((p) => (
-              <Panel key={p.id} accent={p.featured}>
+              <Panel key={p.id} accent={!!p.featured}>
                 <div className="flex items-baseline gap-2">
                   <h3 className="font-display text-lg font-semibold">{p.name}</h3>
                   {p.featured && (
