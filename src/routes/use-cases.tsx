@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand, PageHero, SiteLayout } from "@/components/site/site-layout";
 import { Panel } from "@/components/pink/primitives";
-import { connectors } from "@/lib/mock";
+import { marketingConnectors as connectors } from "@/lib/content";
 
 export const Route = createFileRoute("/use-cases")({
   head: () => ({

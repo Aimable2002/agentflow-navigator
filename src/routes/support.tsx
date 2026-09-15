@@ -3,7 +3,7 @@ import { BookOpen, LifeBuoy, MessageCircle, ShieldCheck } from "lucide-react";
 import { PageHero, SiteLayout } from "@/components/site/site-layout";
 import { Panel, SectionHeading } from "@/components/pink/primitives";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { faqs } from "@/lib/mock";
+import { faqs } from "@/lib/content";
 
 export const Route = createFileRoute("/support")({
   head: () => ({

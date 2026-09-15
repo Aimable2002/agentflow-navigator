@@ -8,7 +8,7 @@ import {
   Panel,
   SectionHeading,
 } from "@/components/pink/primitives";
-import { connectors, plans } from "@/lib/mock";
+import { marketingConnectors as connectors, plans } from "@/lib/content";
 
 export const Route = createFileRoute("/")({
   head: () => ({

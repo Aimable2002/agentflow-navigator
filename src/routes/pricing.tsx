@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, Minus } from "lucide-react";
 import { CtaBand, PageHero, SiteLayout } from "@/components/site/site-layout";
 import { Panel, SectionHeading } from "@/components/pink/primitives";
-import { faqs, planMatrix, plans } from "@/lib/mock";
+import { faqs, planMatrix, plans } from "@/lib/content";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({

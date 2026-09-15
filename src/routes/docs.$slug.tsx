@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/site-layout";
 import { Panel } from "@/components/pink/primitives";
-import { docBySlug, docSections } from "@/lib/mock";
+import { docBySlug, docSections } from "@/lib/content";
 
 export const Route = createFileRoute("/docs/$slug")({
   loader: ({ params }) => {

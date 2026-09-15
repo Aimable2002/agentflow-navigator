@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHero, SiteLayout } from "@/components/site/site-layout";
 import { Panel, SectionHeading } from "@/components/pink/primitives";
-import { docSections } from "@/lib/mock";
+import { docSections } from "@/lib/content";
 
 export const Route = createFileRoute("/docs")({
   head: () => ({
