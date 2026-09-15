@@ -81,6 +81,7 @@ const basePlans: (Omit<Plan, "blurb" | "features" | "limits"> & { limits?: strin
     price: "$0",
     cadence: "forever",
     tagline: "Enough to run real work and judge the routing for yourself.",
+    quota: "500 agent requests / month",
     priority: "Best-effort priority — free requests run when capacity is free.",
     cta: "Start free",
     includes: [
