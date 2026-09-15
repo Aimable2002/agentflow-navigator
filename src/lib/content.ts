@@ -134,7 +134,14 @@ const basePlans: (Omit<Plan, "blurb" | "features" | "limits"> & { limits?: strin
   },
 ];
 
-export const planMatrix: { group: string; rows: { label: string; free: string; pro: string; scale: string }[] }[] = [
+export const plans: Plan[] = basePlans.map((p) => ({
+  ...p,
+  blurb: p.tagline,
+  features: p.includes,
+  limits: p.limits ?? [],
+}));
+
+export const planGroups: { group: string; rows: { label: string; free: string; pro: string; scale: string }[] }[] = [
   {
     group: "Agent requests",
     rows: [
