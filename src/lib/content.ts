@@ -181,6 +181,11 @@ export const planGroups: { group: string; rows: { label: string; free: string; p
   },
 ];
 
+/** Flat comparison rows, used by the pricing table. */
+export const planMatrix: { row: string; free: string; pro: string; scale: string }[] = planGroups.flatMap((g) =>
+  g.rows.map((r) => ({ row: r.label, free: r.free, pro: r.pro, scale: r.scale })),
+);
+
 export const faqs: { q: string; a: string }[] = [
   {
     q: "How does PINK decide which model handles my request?",
