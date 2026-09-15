@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, Minus } from "lucide-react";
 import { CtaBand, PageHero, SiteLayout } from "@/components/site/site-layout";
 import { Panel, SectionHeading } from "@/components/pink/primitives";
-import { faqs, planMatrix, plans } from "@/lib/mock";
+import { faqs, planMatrix, plans } from "@/lib/content";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -49,7 +49,7 @@ function Pricing() {
       <div className="mx-auto max-w-7xl px-6">
         <section className="grid gap-4 py-14 lg:grid-cols-3">
           {plans.map((p) => (
-            <Panel key={p.id} accent={p.featured} className="flex flex-col">
+            <Panel key={p.id} accent={!!p.featured} className="flex flex-col">
               <div className="flex items-center gap-2">
                 <h2 className="font-display text-xl font-semibold">{p.name}</h2>
                 {p.featured && (

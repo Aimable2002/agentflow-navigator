@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { tierMeta, type ConnectorId, type TaskStatus, type Tier } from "@/lib/mock";
+import { connectorLabels, tierMeta } from "@/lib/content";
+import type { ConnectorId, TaskStatus, Tier } from "@/lib/types";
 
 export function Logo({ size = "md", withWordmark = true }: { size?: "sm" | "md"; withWordmark?: boolean }) {
   return (
@@ -104,6 +105,7 @@ const statusStyles: Record<TaskStatus, { dot: string; text: string; label: strin
   running: { dot: "bg-violet pulse-dot", text: "text-violet", label: "Running" },
   completed: { dot: "bg-mint", text: "text-mint", label: "Completed" },
   failed: { dot: "bg-destructive", text: "text-destructive", label: "Failed" },
+  cancelled: { dot: "bg-mute", text: "text-mute", label: "Cancelled" },
 };
 
 export function StatusPill({ status, className }: { status: TaskStatus; className?: string }) {
@@ -116,16 +118,8 @@ export function StatusPill({ status, className }: { status: TaskStatus; classNam
   );
 }
 
-export function ConnectorChip({ id, className }: { id: ConnectorId; className?: string }) {
-  const labels: Record<ConnectorId, string> = {
-    mt5: "MT5",
-    github: "GitHub",
-    linear: "Linear",
-    hubspot: "HubSpot",
-    xero: "Xero",
-    zapier: "Zapier",
-    lovable: "Lovable",
-  };
+export function ConnectorChip({ id, className }: { id: ConnectorId | null; className?: string }) {
+  if (!id) return null;
   return (
     <span
       className={cn(
@@ -133,7 +127,7 @@ export function ConnectorChip({ id, className }: { id: ConnectorId; className?: 
         className,
       )}
     >
-      {labels[id]}
+      {connectorLabels[id] ?? id}
     </span>
   );
 }

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand, PageHero, SiteLayout } from "@/components/site/site-layout";
 import { Panel } from "@/components/pink/primitives";
-import { connectors } from "@/lib/mock";
+import { marketingConnectors as connectors } from "@/lib/content";
 
 export const Route = createFileRoute("/use-cases")({
   head: () => ({
@@ -79,15 +79,7 @@ function UseCases() {
                     <h2 className="font-display text-xl font-semibold">{c.name}</h2>
                     <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mute">{c.category}</p>
                   </div>
-                  <span
-                    className={
-                      c.connected
-                        ? "ml-auto font-mono text-[11px] text-mint"
-                        : "ml-auto font-mono text-[11px] text-mute"
-                    }
-                  >
-                    {c.connected ? "● live in demo" : "○ available"}
-                  </span>
+                  <span className="ml-auto font-mono text-[11px] text-mint">● available</span>
                 </div>
                 <p className="mt-4 text-sm leading-relaxed text-fog">{c.description}</p>
                 <Link

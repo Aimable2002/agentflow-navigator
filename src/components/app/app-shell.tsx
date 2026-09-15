@@ -16,8 +16,11 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo, ActivityBars, Meter, StatusPill, TierBadge } from "@/components/pink/primitives";
-import { tasks, usage } from "@/lib/mock";
+import { useProfile, useTasks } from "@/lib/queries";
+import { initials, signOut, useSession } from "@/lib/auth";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useNavigate } from "@tanstack/react-router";
+import { planLabel, shortId, taskDuration } from "@/lib/format";
 
 const primaryNav = [
   { to: "/app", label: "Overview", icon: Gauge, exact: true },
@@ -63,6 +66,7 @@ function NavItem({
 }
 
 function TaskActivityIndicator() {
+  const { data: tasks = [] } = useTasks();
   const running = tasks.filter((t) => t.status === "running");
   const queued = tasks.filter((t) => t.status === "queued");
   return (
@@ -85,6 +89,9 @@ function TaskActivityIndicator() {
           </Link>
         </div>
         <ul className="divide-y divide-line">
+          {running.length + queued.length === 0 && (
+            <li className="px-4 py-6 text-center text-xs text-mute">Nothing running right now.</li>
+          )}
           {[...running, ...queued].map((t) => (
             <li key={t.id}>
               <Link to="/app/tasks/$taskId" params={{ taskId: t.id }} className="block px-4 py-3 hover:bg-panel/60">
@@ -97,7 +104,7 @@ function TaskActivityIndicator() {
                   <Meter value={t.progress} tone={t.status === "running" ? "violet" : "mute"} />
                 </div>
                 <p className="mt-1.5 font-mono text-[10px] text-mute">
-                  {t.id} · {t.duration}
+                  {shortId(t.id)} · {taskDuration(t)}
                 </p>
               </Link>
             </li>
@@ -109,7 +116,12 @@ function TaskActivityIndicator() {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const pct = Math.round((usage.requestsUsed / usage.requestsLimit) * 100);
+  const { data: profile } = useProfile();
+  const { user } = useSession();
+  const navigate = useNavigate();
+  const used = profile?.quota_used ?? 0;
+  const limit = profile?.quota_limit ?? 500;
+  const pct = Math.round((used / Math.max(1, limit)) * 100);
   return (
     <div className="flex min-h-screen bg-ink text-white">
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-line bg-ink2 lg:flex">
@@ -118,7 +130,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Logo size="sm" />
           </Link>
           <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.14em] text-mute">
-            {usage.plan}
+            {planLabel(profile?.plan)}
           </span>
         </div>
 
@@ -152,7 +164,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.12em]">
               <span className="text-mute">Requests</span>
               <span className="text-fog">
-                {usage.requestsUsed} / {usage.requestsLimit}
+                {used} / {limit}
               </span>
             </div>
             <div className="mt-2">
@@ -164,15 +176,23 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
           <div className="flex items-center gap-2.5 border-t border-line pt-3">
             <span className="grid size-7 place-items-center rounded-md bg-panel font-mono text-[11px] text-fog">
-              AL
+              {initials(user, profile?.full_name)}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-xs text-white">Avery Lane</p>
-              <p className="truncate font-mono text-[10px] text-mute">avery@acmelabs.io</p>
+              <p className="truncate text-xs text-white">{profile?.full_name ?? user?.email ?? "Your account"}</p>
+              <p className="truncate font-mono text-[10px] text-mute">{profile?.email ?? user?.email ?? ""}</p>
             </div>
-            <Link to="/login" aria-label="Sign out" className="ml-auto text-mute hover:text-white">
+            <button
+              type="button"
+              aria-label="Sign out"
+              onClick={async () => {
+                await signOut();
+                void navigate({ to: "/login" });
+              }}
+              className="ml-auto text-mute hover:text-white"
+            >
               <LogOut className="size-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

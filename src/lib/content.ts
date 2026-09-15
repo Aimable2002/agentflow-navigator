@@ -6,22 +6,127 @@
  */
 import type { Tier } from "./types";
 
-export const tierMeta: Record<Tier, { label: string; blurb: string; use: string }> = {
+export const tierMeta: Record<Tier, { label: string; blurb: string; use: string; note: string; className: string }> = {
   small: {
     label: "small",
     blurb: "Fast, cheap model for lookups, formatting and short answers.",
     use: "Status checks, summaries, single tool calls",
+    note: "Lookups, formatting, single tool calls",
+    className: "text-mint",
   },
   medium: {
     label: "medium",
     blurb: "Balanced model for multi-step work with a few tool calls.",
     use: "Issue triage, data sync, code edits",
+    note: "Multi-step work with a few tool calls",
+    className: "text-amber",
   },
   best: {
     label: "best",
     blurb: "Highest-capability model for hard reasoning and long chains.",
     use: "Strategy design, architecture, tricky debugging",
+    note: "Hard reasoning and long tool chains",
+    className: "text-pink",
   },
+};
+
+/**
+ * Names shown on public marketing pages, where no session exists. The live
+ * catalogue in the app comes from the `connector_catalog` table.
+ */
+export type MarketingConnector = {
+  id: string;
+  name: string;
+  category: string;
+  tagline: string;
+  description: string;
+  actions: string[];
+};
+
+export const marketingConnectors: MarketingConnector[] = [
+  {
+    id: "mt5",
+    name: "MT5",
+    category: "Trading",
+    tagline: "Write, backtest and iterate Expert Advisors",
+    description:
+      "The agent writes MQL5 Expert Advisors, runs them through the strategy tester, reads the report and iterates on the parameters until the numbers hold up.",
+    actions: ["Write an EA from a described edge", "Run a backtest over a date range", "Tune parameters and re-test", "Summarise drawdown and expectancy"],
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    category: "Code",
+    tagline: "Files, commits, pull requests, CI",
+    description:
+      "Read the repository, make a change on a branch, open a pull request and watch the checks. When CI fails, the agent reads the logs and pushes a fix.",
+    actions: ["Read files and history", "Commit on a branch", "Open and update pull requests", "Diagnose failing CI runs"],
+  },
+  {
+    id: "linear",
+    name: "Linear",
+    category: "Tracking",
+    tagline: "Issues, cycles and project state",
+    description:
+      "Turn findings into tracked work. The agent files issues with the context it gathered, moves them through states and reports on cycle progress.",
+    actions: ["Create and update issues", "Attach results to an issue", "Move issues through states", "Report on a cycle"],
+  },
+  {
+    id: "telegram",
+    name: "Telegram",
+    category: "Messaging",
+    tagline: "Talk to the agent and get task alerts in chat",
+    description:
+      "Get a message the moment a background task finishes or fails, and reply in the same chat to send the agent its next instruction.",
+    actions: ["Notify on task completion", "Alert on failures", "Accept new instructions from chat", "Send daily digests"],
+  },
+  {
+    id: "hubspot",
+    name: "HubSpot",
+    category: "CRM",
+    tagline: "Contacts, deals and pipeline hygiene",
+    description:
+      "Read the pipeline, flag deals that have gone quiet, clean up duplicate records and draft the follow-ups that are overdue.",
+    actions: ["Summarise the pipeline", "Flag stalled deals", "Update contacts and deals", "Draft follow-ups"],
+  },
+  {
+    id: "xero",
+    name: "Xero",
+    category: "Accounting",
+    tagline: "Bookkeeping, invoices and reconciliation",
+    description:
+      "Reconcile a period, categorise what is obvious and hand back a short list of the transactions that genuinely need a human decision.",
+    actions: ["Reconcile a period", "Categorise transactions", "Chase unpaid invoices", "Produce a month-end summary"],
+  },
+  {
+    id: "zapier",
+    name: "Zapier",
+    category: "Bridge",
+    tagline: "A bridge to thousands of other apps",
+    description:
+      "Anything without a first-class connector can still be reached. The agent triggers your Zaps and reads their results back into the conversation.",
+    actions: ["Trigger a Zap", "Pass structured data through", "Read the run result", "Chain several apps in one job"],
+  },
+  {
+    id: "lovable",
+    name: "Lovable",
+    category: "Builds",
+    tagline: "Trigger and manage full-stack app builds",
+    description:
+      "Describe an app or a change and the agent drives the build end to end, then reports back with what shipped and what needs review.",
+    actions: ["Start a full-stack build", "Apply a described change", "Read build status", "Summarise what shipped"],
+  },
+];
+
+export const connectorLabels: Record<string, string> = {
+  mt5: "MT5",
+  github: "GitHub",
+  linear: "Linear",
+  telegram: "Telegram",
+  hubspot: "HubSpot",
+  xero: "Xero",
+  zapier: "Zapier",
+  lovable: "Lovable",
 };
 
 export type Plan = {
@@ -30,19 +135,26 @@ export type Plan = {
   price: string;
   cadence: string;
   tagline: string;
+  /** Short marketing line, alias of tagline for card layouts. */
+  blurb: string;
+  quota: string;
   priority: string;
   cta: string;
   featured?: boolean;
   includes: string[];
+  /** Alias of includes, used by the pricing and onboarding cards. */
+  features: string[];
+  limits: string[];
 };
 
-export const plans: Plan[] = [
+const basePlans: (Omit<Plan, "blurb" | "features" | "limits"> & { limits?: string[] })[] = [
   {
     id: "free",
     name: "Free",
     price: "$0",
     cadence: "forever",
     tagline: "Enough to run real work and judge the routing for yourself.",
+    quota: "500 agent requests / month",
     priority: "Best-effort priority — free requests run when capacity is free.",
     cta: "Start free",
     includes: [
@@ -60,6 +172,7 @@ export const plans: Plan[] = [
     price: "$49",
     cadence: "per month",
     tagline: "For people who put the agent in their daily loop.",
+    quota: "10,000 agent requests / month",
     priority: "Priority processing — every request skips the free queue.",
     cta: "Upgrade to Pro",
     featured: true,
@@ -79,6 +192,7 @@ export const plans: Plan[] = [
     price: "$199",
     cadence: "per month",
     tagline: "For teams running the agent against production systems.",
+    quota: "Unlimited fair-use requests",
     priority: "Reserved best-tier capacity — no queue, even at peak.",
     cta: "Talk to us",
     includes: [
@@ -93,7 +207,14 @@ export const plans: Plan[] = [
   },
 ];
 
-export const planMatrix: { group: string; rows: { label: string; free: string; pro: string; scale: string }[] }[] = [
+export const plans: Plan[] = basePlans.map((p) => ({
+  ...p,
+  blurb: p.tagline,
+  features: p.includes,
+  limits: p.limits ?? [],
+}));
+
+export const planGroups: { group: string; rows: { label: string; free: string; pro: string; scale: string }[] }[] = [
   {
     group: "Agent requests",
     rows: [
@@ -132,6 +253,11 @@ export const planMatrix: { group: string; rows: { label: string; free: string; p
     ],
   },
 ];
+
+/** Flat comparison rows, used by the pricing table. */
+export const planMatrix: { row: string; free: string; pro: string; scale: string }[] = planGroups.flatMap((g) =>
+  g.rows.map((r) => ({ row: r.label, free: r.free, pro: r.pro, scale: r.scale })),
+);
 
 export const faqs: { q: string; a: string }[] = [
   {

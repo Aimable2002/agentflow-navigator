@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Logo, Meter, Panel } from "@/components/pink/primitives";
-import { connectors, plans } from "@/lib/mock";
+import { marketingConnectors as connectors, plans } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/onboarding")({
