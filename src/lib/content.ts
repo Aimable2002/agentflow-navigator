@@ -62,10 +62,16 @@ export type Plan = {
   price: string;
   cadence: string;
   tagline: string;
+  /** Short marketing line, alias of tagline for card layouts. */
+  blurb: string;
+  quota: string;
   priority: string;
   cta: string;
   featured?: boolean;
   includes: string[];
+  /** Alias of includes, used by the pricing and onboarding cards. */
+  features: string[];
+  limits: string[];
 };
 
 export const plans: Plan[] = [
